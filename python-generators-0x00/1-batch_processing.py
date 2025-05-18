@@ -24,12 +24,10 @@ def stream_users_in_batches(batch_size):
     cursor.close()
     connection.close()
 
-
 def batch_processing(batch_size):
     """Yields filtered users over age 25 from each batch."""
     for batch in stream_users_in_batches(batch_size):
         yield [user for user in batch if float(user['age']) > 25]
-
 
 if __name__ == "__main__":
     for users in batch_processing(5):
