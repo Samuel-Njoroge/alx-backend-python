@@ -1,11 +1,11 @@
 import mysql.connector
 
 def stream_users_in_batches(batch_size):
-    """Generator that yields users from user_data table in batches."""
+    """Yields batches of users from the user_data table."""
     connection = mysql.connector.connect(
         host='localhost',
-        user='root',    
-        password='mypassword',       
+        user='root',        # Change if needed
+        password='',        # Change if needed
         database='ALX_prodev'
     )
     cursor = connection.cursor(dictionary=True)
@@ -26,10 +26,10 @@ def stream_users_in_batches(batch_size):
 
 
 def batch_processing(batch_size):
-    """Generator that processes each batch and yields users over age 25."""
+    """Yields filtered users over age 25 from each batch."""
     for batch in stream_users_in_batches(batch_size):
-        filtered = [user for user in batch if float(user['age']) > 25]
-        yield filtered
+        yield [user for user in batch if float(user['age']) > 25]
+
 
 
 if __name__ == "__main__":
