@@ -1,14 +1,16 @@
 import sqlite3
 import functools
+from datetime import datetime
 
-# Decorator to log SQL queries
+# Decorator to log SQL queries with timestamp
 def log_queries(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         query = kwargs.get('query')
         if query is None and args:
             query = args[0]
-        print(f"[LOG] Executing SQL Query: {query}")
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        print(f"[{timestamp}] Executing SQL Query: {query}")
         return func(*args, **kwargs)
     return wrapper
 
