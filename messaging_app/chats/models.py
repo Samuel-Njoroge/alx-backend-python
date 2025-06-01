@@ -8,6 +8,7 @@ class User(AbstractUser):
     password = models.CharField(max_length=128)  
     first_name = models.CharField(max_length=150, blank=True) 
     last_name = models.CharField(max_length=150, blank=True)
+    phone_number = models.CharField(max_length=150, blank=True)
 
     user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     bio = models.TextField(blank=True, null=True)
