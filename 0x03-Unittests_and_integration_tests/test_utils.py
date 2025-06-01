@@ -46,7 +46,6 @@ class TestGetJson(unittest.TestCase):
         mock_get.return_value = mock_response
 
         result = get_json(test_url)
-
         mock_get.assert_called_once_with(test_url)
         self.assertEqual(result, test_payload)
 
@@ -67,10 +66,7 @@ class TestMemoize(unittest.TestCase):
 
         with patch.object(TestClass, 'a_method', return_value=42) as mock_method:
             obj = TestClass()
-
-            # First call to a_property
             result1 = obj.a_property
-            # Second call to a_property
             result2 = obj.a_property
 
             self.assertEqual(result1, 42)
