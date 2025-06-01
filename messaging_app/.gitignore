@@ -1,4 +1,8 @@
-venv
-../messaging_app/__pycache__/*
-./chats/__pycache__/*
-./chats/migrations/*
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+*/migrations/
+!*/migrations/__init__.py
+*.sqlite3
+*.env
