@@ -4,11 +4,10 @@ import uuid
 
 
 class User(AbstractUser):
-    # Explicitly mention fields to satisfy checks (even though inherited)
-    email = models.EmailField(unique=True)  # Explicitly redeclare email (optional)
-    password = models.CharField(max_length=128)  # Explicitly redeclare password (optional)
-    first_name = models.CharField(max_length=150, blank=True)  # Explicitly redeclare first_name (optional)
-    last_name = models.CharField(max_length=150, blank=True)  # Explicitly redeclare last_name (optional)
+    email = models.EmailField(unique=True)  
+    password = models.CharField(max_length=128)  
+    first_name = models.CharField(max_length=150, blank=True) 
+    last_name = models.CharField(max_length=150, blank=True)
 
     user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     bio = models.TextField(blank=True, null=True)
