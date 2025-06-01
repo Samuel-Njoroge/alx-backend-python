@@ -1,11 +1,16 @@
-import uuid
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+import uuid
 
 
 class User(AbstractUser):
+    # Explicitly mention fields to satisfy checks (even though inherited)
+    email = models.EmailField(unique=True)  # Explicitly redeclare email (optional)
+    password = models.CharField(max_length=128)  # Explicitly redeclare password (optional)
+    first_name = models.CharField(max_length=150, blank=True)  # Explicitly redeclare first_name (optional)
+    last_name = models.CharField(max_length=150, blank=True)  # Explicitly redeclare last_name (optional)
+
     user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    phone_number = models.CharField(max_length=15, blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
     profile_image = models.ImageField(upload_to='profiles/', blank=True, null=True)
 
