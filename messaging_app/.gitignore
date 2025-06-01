@@ -1,0 +1,4 @@
+venv
+../messaging_app/__pycache__/*
+./chats/__pycache__/*
+./chats/migrations/*
