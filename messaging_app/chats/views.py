@@ -4,7 +4,7 @@ from rest_framework.decorators import action
 from .models import Conversation, Message
 from .serializers import ConversationSerializer, MessageSerializer
 from django.contrib.auth import get_user_model
-from .permissions import IsParticipantOrReadOnly
+from .permissions import IsParticipantOrReadOnly, IsParticipantOfConversation
 
 User = get_user_model()
 
@@ -15,7 +15,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
     """
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsParticipantOfConversation]
     filter_backends = [filters.OrderingFilter, filters.SearchFilter]
     search_fields = ['participants__username']
     ordering_fields = ['created_at']
@@ -45,7 +45,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     """
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsParticipantOfConversation]
     filter_backends = [filters.OrderingFilter, filters.SearchFilter]
     search_fields = ['content', 'sender__username']
     ordering_fields = ['sent_at']
@@ -78,12 +78,3 @@ class MessageViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class ConversationViewSet(viewsets.ModelViewSet):
-    ...
-    permission_classes = [permissions.IsAuthenticated, IsParticipantOrReadOnly]
-    ...
-
-class MessageViewSet(viewsets.ModelViewSet):
-    ...
-    permission_classes = [permissions.IsAuthenticated, IsParticipantOrReadOnly]
-    ...
