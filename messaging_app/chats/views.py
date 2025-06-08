@@ -4,6 +4,7 @@ from rest_framework.decorators import action
 from .models import Conversation, Message
 from .serializers import ConversationSerializer, MessageSerializer
 from django.contrib.auth import get_user_model
+from .permissions import IsParticipantOrReadOnly
 
 User = get_user_model()
 
@@ -75,3 +76,9 @@ class MessageViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(message)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class ConversationViewSet(viewsets.ModelViewSet):
+    ...
+    permission_classes = [permissions.IsAuthenticated, IsParticipantOrReadOnly]
+    ...
