@@ -1,5 +1,3 @@
-# chats/views.py
-
 from rest_framework import viewsets, permissions, status, filters
 from rest_framework.response import Response
 from .models import Conversation, Message

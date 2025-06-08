@@ -1,8 +1,5 @@
-# chats/filters.py
-
 import django_filters
 from .models import Message
-from django.utils import timezone
 
 class MessageFilter(django_filters.FilterSet):
     start_date = django_filters.DateTimeFilter(field_name='sent_at', lookup_expr='gte')
