@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Objective: Scale Django app to 3 replicas, test load, monitor resources
+
+echo "🔁 Scaling Django app deployment to 3 replicas..."
+kubectl scale deployment django-messaging-deployment --replicas=3
+
+if [ $? -ne 0 ]; then
+  echo "❌ Failed to scale deployment."
+  exit 1
+fi
+
+sleep 5
+
+echo "✅ Scaled to 3 replicas. Checking running pods..."
+kubectl get pods -l app=django-messaging
+
+echo "📊 Verifying resource usage..."
+kubectl top pods
+
+# Check if wrk is installed
+if ! command -v wrk &> /dev/null
+then
+    echo "❌ 'wrk' load testing tool is not installed. Install it with:"
+    echo "   brew install wrk       # macOS"
+    echo "   sudo apt install wrk   # Ubuntu/Debian"
+    exit 1
+fi
+
+echo "🚀 Starting port-forward for wrk test on port 8000..."
+kubectl port-forward svc/django-messaging-service 8000:8000 &
+
+PORT_FORWARD_PID=$!
+sleep 3  
+
+echo "⚡ Running wrk load test on http://localhost:8000 ..."
+wrk -t2 -c50 -d10s http://localhost:8000/
+
+# Cleanup
+kill $PORT_FORWARD_PID
+
+echo "✅ Load test complete. Script finished."
