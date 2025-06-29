@@ -1,0 +1,26 @@
+#!/bin/bash
+
+echo "🔄 Starting rolling update of django-blue to version 2.0..."
+
+# Apply the updated deployment
+kubectl apply -f blue_deployment.yaml
+
+# Monitor rollout status
+echo "⏳ Monitoring rollout status..."
+kubectl rollout status deployment/django-blue
+
+# Get service URL
+echo "🌐 Testing service for disruptions using curl..."
+echo "Sending requests every 1s for 15s..."
+
+for i in {1..15}; do
+  RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/)
+  echo "[$(date +"%T")] HTTP status: $RESPONSE"
+  sleep 1
+done
+
+# List running pods after update
+echo "📦 Current pods:"
+kubectl get pods -l app=django,version=blue
+
+echo "✅ Rolling update script finished."
