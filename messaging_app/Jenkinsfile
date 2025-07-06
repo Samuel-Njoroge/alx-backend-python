@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+
+    tools {
+        python 'Python 3'
+    }
+
+    environment {
+        GITHUB_CREDENTIALS = credentials('github-creds')
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git credentialsId: 'github-creds', url: 'https://github.com/Samuel-Njoroge/alx-backend-python.git'
+            }
+        }
+
+        stage('Set up Python environment') {
+            steps {
+                withPythonEnv('Python 3') {
+                    sh 'pip install -r messaging_app/requirements.txt'
+                }
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                withPythonEnv('Python 3') {
+                    sh 'pytest messaging_app/tests --junitxml=report.xml'
+                }
+            }
+        }
+
+        stage('Publish Test Report') {
+            steps {
+                junit 'report.xml'
+            }
+        }
+    }
+}
