@@ -7,6 +7,8 @@ pipeline {
 
     environment {
         GITHUB_CREDENTIALS = credentials('github-creds')
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
+        IMAGE_NAME = 'samuelnjoroge/django-messaging-app'
     }
 
     stages {
@@ -16,7 +18,7 @@ pipeline {
             }
         }
 
-        stage('Set up Python environment') {
+        stage('Install Dependencies') {
             steps {
                 withPythonEnv('Python 3') {
                     sh 'pip install -r messaging_app/requirements.txt'
@@ -35,6 +37,23 @@ pipeline {
         stage('Publish Test Report') {
             steps {
                 junit 'report.xml'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh "docker build -t $IMAGE_NAME:latest -f messaging_app/Dockerfile ."
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
+                    sh "docker push $IMAGE_NAME:latest"
+                }
             }
         }
     }
